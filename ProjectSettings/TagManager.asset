@@ -6,6 +6,7 @@ TagManager:
   tags:
   - RWall
   - LWall
+  - ball
   layers:
   - Default
   - TransparentFX
