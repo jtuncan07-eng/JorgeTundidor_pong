@@ -6,18 +6,54 @@ using UnityEngine;
 
 public class PlayerControler : MonoBehaviour
 {
-    public float moveSpeed = 15f;       //speed of the paddle
-    public bool useArrowKeys = false;   //If it's true use the arrows keys, if's not use W and S
-    public float topMargin;             //Max limit to move the paddle
-    public float bottomMargin;          //Minim limit to move the paddle
+    public float moveSpeed = 15f;       
+    public bool useArrowKeys = false;   
+    public float topMargin;             
+    public float bottomMargin;
+    public bool IA;
+    public GameObject ball;
+    public float IAfollowTolerance = 0.5f;
+
     
     void Update()
     {
+        if(IA == false)
+        {
+            MovePaddle();
+        }
+        else
+        {
+            MovePaddleIA();
+        }
         MovePaddle();
     }
     void MovePaddle()
     {
         this.gameObject.transform.position = new Vector3(transform.position.x, ConstrainPaddle(), transform.position.z);
+    }
+    void MovePaddleIA()
+    {
+        int direccion = 0;
+        float diferencia = ball.transform.position.y - transform.position.y;
+
+        if (diferencia > IAfollowTolerance)
+        {
+            direccion = 1;
+        }
+        else if (diferencia < -IAfollowTolerance)
+        {
+            direccion = -1;
+        }
+        float nuevaY = transform.position.y + (direccion * moveSpeed / 2 * Time.deltaTime);
+        if (nuevaY > topMargin)
+        {
+            nuevaY = topMargin;
+        }
+        if (nuevaY < bottomMargin)
+        {
+            nuevaY = bottomMargin;
+        }
+        this.gameObject.transform.position = new Vector3(transform.position.x, nuevaY, transform.position.z);
     }
     float ConstrainPaddle()
     {
@@ -31,7 +67,6 @@ public class PlayerControler : MonoBehaviour
             nuevaY = bottomMargin;
         }
         return nuevaY;
-
     }
     float PaddleDirection()
     {
@@ -64,7 +99,6 @@ public class PlayerControler : MonoBehaviour
             }      
         }
         return mover;
-
     }
 }
  
